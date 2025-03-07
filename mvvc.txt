@@ -1,0 +1,85 @@
+Angular, particularly from version 2 onwards, does not strictly follow the traditional **Model-View-Controller (MVC)** pattern. Instead, it is more aligned with a **Component-Based Architecture (CBA)**, which can be thought of as a variation of MVC, often referred to as **MVVC (Model-View-View Controller)**. Here's a simplified explanation with a real-world example:
+
+## Angular Architecture Overview
+
+Angular applications are structured around several key components:
+
+- **Modules**: These are the building blocks of an Angular application. They help organize components, services, and directives. The main module is the `AppModule`, which bootstraps the application[1][5].
+
+- **Components**: These are the core building blocks of the UI. Each component consists of a template (the view) and a class (which acts as a controller). Components manage user interaction and display data[1][7].
+
+- **Services**: These handle data and shared functionality across the application. They can be thought of as the model in the MVC pattern, as they manage data and provide it to components[3][7].
+
+- **Directives**: These extend the functionality of HTML elements. They can be structural (e.g., `*ngFor`) or attribute-based (e.g., `ngModel`)[7].
+
+## Real-World Example: A Simple Task List App
+
+Imagine you're building a task list application with Angular. Here's how it fits into the architecture:
+
+- **Model (Data)**: This is managed by a service, say `TaskService`, which retrieves and updates task data from a server or local storage.
+
+- **View (Template)**: This is the HTML template part of a component, e.g., `TaskComponent`, which displays the list of tasks.
+
+- **Controller (Component Class)**: The class associated with `TaskComponent` manages user interactions (e.g., adding or deleting tasks) and updates the view accordingly.
+
+- **View Controller (Component Logic)**: The component class also acts as a controller, handling user input and updating the model via services.
+
+### Example Code Snippet
+
+```typescript
+// TaskService (Model)
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TaskService {
+
+  private tasks = [
+    { id: 1, name: 'Task 1' },
+    { id: 2, name: 'Task 2' }
+  ];
+
+  getTasks() {
+    return this.tasks;
+  }
+
+  addTask(task) {
+    this.tasks.push(task);
+  }
+}
+
+// TaskComponent (View & Controller)
+import { Component, OnInit } from '@angular/core';
+import { TaskService } from './task.service';
+
+@Component({
+  selector: 'app-task',
+  template: `
+    
+      {{ task.name }}
+    
+    
+    Add Task
+  `
+})
+export class TaskComponent implements OnInit {
+
+  tasks = [];
+  newTask = '';
+
+  constructor(private taskService: TaskService) { }
+
+  ngOnInit(): void {
+    this.tasks = this.taskService.getTasks();
+  }
+
+  addTask() {
+    this.taskService.addTask({ id: this.tasks.length + 1, name: this.newTask });
+    this.tasks = this.taskService.getTasks();
+    this.newTask = '';
+  }
+}
+```
+
+In this example, `TaskService` acts as the model, `TaskComponent`'s template is the view, and the component class itself acts as both the view controller and controller, managing interactions and updating the model through services. This setup aligns with Angular's component-based architecture, which blends elements of MVC and MVVM patterns.
