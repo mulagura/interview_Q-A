@@ -1,0 +1,123 @@
+## Overview of JWT and OAuth
+
+- **JSON Web Tokens (JWTs)** are like digital tickets that prove you are who you say you are. They are used to securely send information between two parties, like your Angular app and a server.
+- **OAuth** is a protocol that allows users to grant third-party applications limited access to their resources on another service provider's website, without sharing their login credentials.
+
+## How JWT and OAuth Work Together in Angular
+
+### JWT Workflow
+
+1. **User Logs In**:
+   - You enter your username and password in your Angular app.
+   - This information is sent to a server (usually a separate authentication server).
+
+2. **Server Validates Credentials**:
+   - The server checks if your username and password are correct.
+   - If they are, the server creates a JWT token.
+
+3. **Creating the JWT Token**:
+   - The JWT token is made up of three parts:
+     - **Header**: Contains metadata about the token.
+     - **Payload**: Includes user data like user ID and expiration time.
+     - **Signature**: A secret key is used to sign the header and payload, ensuring the token can't be tampered with.
+
+4. **Server Sends JWT to Client**:
+   - The JWT token is sent back to your Angular app.
+
+5. **Storing the JWT Token**:
+   - The app stores the JWT token locally, often in `localStorage` or `sessionStorage`.
+
+6. **Using the JWT Token for Authentication**:
+   - Whenever your Angular app makes a request to the server, it includes the JWT token in the `Authorization` header.
+   - The server verifies the token by checking its signature and expiration time.
+   - If valid, the server grants access to the requested resources.
+
+### OAuth Workflow
+
+1. **User Initiates OAuth Flow**:
+   - You click on a login button (e.g., Google, Facebook) in your Angular app.
+   - The app redirects you to the OAuth provider's login page.
+
+2. **User Authenticates with OAuth Provider**:
+   - You enter your credentials on the OAuth provider's page.
+   - If successful, the OAuth provider redirects you back to your Angular app with an authorization code.
+
+3. **Exchange Code for Token**:
+   - Your Angular app sends the authorization code to the OAuth provider's token endpoint.
+   - In response, the OAuth provider sends an access token (which can be a JWT) and possibly a refresh token.
+
+4. **Using OAuth Tokens**:
+   - The access token is used to authenticate requests to protected resources.
+   - If the access token expires, the refresh token can be used to obtain a new access token without requiring user interaction.
+
+### Combining JWT and OAuth in Angular
+
+In Angular, you can use libraries like `angular-oauth2-oidc` for OAuth and `jwt-decode` for JWT handling. Here’s a simplified example:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { OAuth2Service } from 'angular-oauth2-oidc';
+import { jwtDecode } from 'jwt-decode';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  private oauth2Service: OAuth2Service;
+
+  constructor(oauth2Service: OAuth2Service) {
+    this.oauth2Service = oauth2Service;
+  }
+
+  async login() {
+    const result = await this.oauth2Service.authorize({
+      scope: 'openid profile email',
+      response_type: 'code',
+    });
+
+    const code = result.code;
+    const token = await this.oauth2Service.token({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: 'http://localhost:4200/callback',
+    });
+
+    return token.access_token;
+  }
+
+  async verifyToken(token: string) {
+    const decoded = jwtDecode(token);
+    return decoded;
+  }
+}
+```
+
+### Example in Angular Components
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
+
+@Component({
+  selector: 'app-login',
+  template: `
+    Login
+  `,
+})
+export class LoginComponent implements OnInit {
+  constructor(private authService: AuthService) {}
+
+  async login() {
+    const token = await this.authService.login();
+    // Store and verify the token
+    const decoded = await this.authService.verifyToken(token);
+    console.log(decoded);
+  }
+}
+```
+
+### Best Practices
+
+- **Use Interceptors**: Implement an HTTP interceptor to automatically include the JWT token in every request.
+- **Refresh Tokens**: Use refresh tokens to obtain new access tokens when they expire, ensuring continuous login without user interaction.
+- **Secure Storage**: Store tokens securely using `localStorage` or cookies with appropriate flags (e.g., `httpOnly`, `secure`).
