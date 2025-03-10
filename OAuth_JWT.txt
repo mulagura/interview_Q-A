@@ -1,3 +1,16 @@
+How JWT (JSON Web Token) authentication works?
+
+1) Login & Token Issuance – User logs in, server verifies credentials , and issues a signed JWT.
+
+2) Storage & Usage – Client (browser/app) stores JWT and sends it in requests.
+
+3) Verification – Server validates JWT’s signature and expiry.
+
+4) Stateless Auth – No sessions; each request is authenticated via JWT.
+
+5) Token Expiry & Refresh – JWTs typically have an expiration time; a refresh token mechanism is used for renewing access.
+............................................................................................................................
+
 ## Overview of JWT and OAuth
 
 - **JSON Web Tokens (JWTs)** are like digital tickets that prove you are who you say you are. They are used to securely send information between two parties, like your Angular app and a server.
