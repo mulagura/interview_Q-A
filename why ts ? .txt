@@ -1,0 +1,56 @@
+## What is TypeScript?
+
+**TypeScript** is a statically typed language and a superset of JavaScript, developed by Microsoft. It adds optional static typing and other features like classes, interfaces, and generics to JavaScript, making it more suitable for large-scale applications[2][7]. TypeScript code is compiled (or transpiled) into JavaScript to run in environments like web browsers or Node.js[3][4].
+
+## Why Use TypeScript in an Angular App?
+
+1. **Type Safety**: TypeScript's static typing helps catch type-related errors at compile time rather than runtime, improving code reliability and maintainability[3][5].
+2. **Better Tooling**: TypeScript provides advanced features like autocompletion, navigation, and refactoring, which are particularly beneficial in complex frameworks like Angular[6].
+3. **Scalability**: As applications grow, TypeScript's type annotations and object-oriented features make it easier to manage and maintain large codebases[7].
+
+## Differences Between TypeScript and JavaScript
+
+- **Static Typing**: TypeScript allows specifying types for variables and function parameters, which helps in catching errors early. JavaScript is dynamically typed, meaning types are determined at runtime[3].
+- **Object-Oriented Features**: TypeScript supports classes, interfaces, and inheritance more robustly than JavaScript[5].
+- **Compilation**: TypeScript needs to be compiled into JavaScript to run, whereas JavaScript can be executed directly[2][4].
+
+## What Happens Under the Hood When Compiling an Angular App Using TypeScript?
+
+1. **Compilation Process**: When you compile an Angular app written in TypeScript, the TypeScript compiler (tsc) converts the `.ts` files into `.js` files. This process is called transpilation[2][4].
+   
+2. **Type Checking**: During compilation, TypeScript checks for type errors based on the type annotations provided in the code. If there are errors, it reports them before generating the JavaScript output[3].
+
+3. **Output**: The resulting JavaScript files are what the browser or Node.js environment executes. The original TypeScript files are not executed directly[1][2].
+
+4. **Source Maps**: To aid debugging, TypeScript can generate source maps that map the compiled JavaScript back to the original TypeScript code. This allows developers to debug their TypeScript code directly in tools like Chrome DevTools[4].
+
+5. **Build Tools Integration**: In Angular projects, tools like Webpack or Rollup are often used to manage the build process, including compiling TypeScript to JavaScript and bundling the output for deployment[4]. 
+
+Here's a simplified example of how TypeScript compilation works in an Angular context:
+
+```typescript
+// example.ts
+interface User {
+  name: string;
+  age: number;
+}
+
+function greet(user: User) {
+  console.log(`Hello, ${user.name}!`);
+}
+
+greet({ name: "John", age: 30 });
+```
+
+After compilation, the TypeScript code is converted into JavaScript:
+
+```javascript
+// example.js (compiled output)
+function greet(user) {
+  console.log(`Hello, ${user.name}!`);
+}
+
+greet({ name: "John", age: 30 });
+```
+
+This JavaScript output is what's executed by the browser or Node.js environment.
