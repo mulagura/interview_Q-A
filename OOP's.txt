@@ -1,0 +1,117 @@
+Angular incorporates **Object-Oriented Programming (OOP)** concepts through its use of TypeScript and architectural patterns. 
+Here’s how it implements key OOP principles:
+
+---
+
+### 1. **Encapsulation**  
+Angular components and services encapsulate data and methods within classes, hiding internal details.  
+**Example**:  
+```typescript
+@Component({
+  selector: 'app-user',
+  template: `{{ user.name }}`,
+  // Styles are encapsulated to this component
+  styles: [`h2 { color: blue; }`]
+})
+export class UserComponent {
+  private user = { name: 'John' }; // Private property (encapsulated)
+  public getUserName(): string {
+    return this.user.name; // Public method to access data
+  }
+}
+```
+- **Private properties** like `user` are hidden from external access.  
+- **Public methods** expose controlled interactions.
+
+---
+
+### 2. **Abstraction**  
+Services abstract complex logic, exposing only necessary interfaces.  
+**Example**:  
+```typescript
+@Injectable({ providedIn: 'root' })
+export class DataService {
+  private fetchData(): Observable { 
+    // Hidden implementation (HTTP call)
+    return this.http.get('api/data');
+  }
+
+  public getData(): Observable { 
+    return this.fetchData(); // Exposed simplified method
+  }
+}
+```
+- External components interact with `getData()` without knowing the HTTP logic.
+
+---
+
+### 3. **Inheritance**  
+Components and services can inherit from base classes.  
+**Example**:  
+```typescript
+export abstract class BaseComponent {
+  protected log(message: string): void {
+    console.log(message);
+  }
+}
+
+@Component({...})
+export class ChildComponent extends BaseComponent {
+  ngOnInit(): void {
+    this.log('Component initialized'); // Inherits log() method
+  }
+}
+```
+- Child components reuse methods from parent classes.
+
+---
+
+### 4. **Polymorphism**  
+Interfaces allow multiple implementations.  
+**Example**:  
+```typescript
+interface Logger {
+  log(message: string): void;
+}
+
+@Injectable()
+export class ConsoleLogger implements Logger {
+  log(message: string): void {
+    console.log(message);
+  }
+}
+
+@Injectable()
+export class FileLogger implements Logger {
+  log(message: string): void {
+    // Write to file
+  }
+}
+```
+- Different classes implement the same `Logger` interface.
+
+---
+
+### 5. **SOLID Principles**  
+Angular’s architecture aligns with SOLID:  
+- **Single Responsibility**: Components focus on UI, services on logic.  
+- **Dependency Inversion**: Services are injected via constructors, decoupling classes.  
+- **Open-Closed Principle**: Extend components via decorators or composition (e.g., `@Input()`).
+
+---
+
+### Why TypeScript Enables OOP in Angular  
+- **Classes**: Components, services, and directives are defined as classes.  
+- **Interfaces**: Define contracts for data models (e.g., `User` interface).
+- **Access Modifiers**: `public`, `private`, and `protected` enforce encapsulation.
+
+---
+
+### Key Takeaways  
+Angular leverages OOP concepts through:  
+- **Components** (encapsulation),  
+- **Services** (abstraction),  
+- **TypeScript** (classes, interfaces),  
+- **Dependency Injection** (decoupling).  
+While not all OOP principles are used equally (e.g., inheritance is limited), Angular provides a structured, 
+scalable architecture aligned with OOP best practices.
